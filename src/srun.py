@@ -19,12 +19,13 @@ AP_add = argparse.ArgumentParser("add",
 AP_add.add_argument("account")
 AP_add.add_argument("variables", nargs="+")
 AP_add.add_argument("--service", type=str, default=None)
-AP_add.add_argument("--dry", action="store_true")
+AP_add.add_argument("--dry", action="store_true", default=False)
 
 AP_del = argparse.ArgumentParser("del",
     description="del environment variables from keychain.")
 AP_del.add_argument("account")
 AP_del.add_argument("variables", nargs="+")
+AP_del.add_argument("--dry", action="store_true", default=False)
 
 AP_show = argparse.ArgumentParser("show",
     description="show environment variables from keychain.")
@@ -100,7 +101,7 @@ def mask(s, start=2, end=2):
 
 def show_variables(d, safe=True, **kwargs):
     for k, v in kwargs.items():
-        print "%s: %s" % (k, v)
+        print "[%s]: %s" % (k, v)
     print "===================="
 
     for k in sorted(d.keys()):
@@ -129,12 +130,29 @@ def add(args):
             account, d,
             service_name=args.service)
 
+
+def delete(args):
+    account = args.account
+    secret_txt = load_from_keychain_mac(account)
+    d = load_variables(secret_txt)
+
+    for k in args.variables:
+        del d[k]
+
+    if args.dry:
+        show_variables(d, account=account, service_name=args.service)
+    else:
+        persist_to_keychain_mac(
+            account, d,
+            service_name=account)
+
+
 def show(args):
     account = args.account
     secret_txt = load_from_keychain_mac(account)
     d = load_variables(secret_txt)
 
-    show_variables(d, safe=not(args.unmask))
+    show_variables(d, account=account, safe=not(args.unmask))
 
 
 def main():
@@ -146,9 +164,14 @@ def main():
     elif action == 'add':
         add(
             AP_add.parse_args(argv))
+    elif action == 'del':
+        delete(
+            AP_del.parse_args(argv))
+
     elif action == 'show':
         show(
             AP_show.parse_args(argv))
+
 
 if __name__ == '__main__':
     main()
