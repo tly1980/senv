@@ -6,8 +6,9 @@ import csv
 import os
 import argparse
 import StringIO
+import getpass
 
-AP = argparse.ArgumentParser("srun", description="load environment variables from keychain and execute your command.")
+AP = argparse.ArgumentParser("senv", description="load environment variables from keychain and execute your command.")
 
 AP_run = argparse.ArgumentParser("run", description="load environment variables from keychain and execute your command.")
 AP_run.add_argument("account")
@@ -17,9 +18,10 @@ AP_run.add_argument("cmd", nargs="+")
 AP_add = argparse.ArgumentParser("add",
     description="add or update environment variables to keychain.")
 AP_add.add_argument("account")
-AP_add.add_argument("variables", nargs="+")
+AP_add.add_argument("variables", nargs="*", default=[])
 AP_add.add_argument("--service", type=str, default=None)
 AP_add.add_argument("--dry", action="store_true", default=False)
+AP_add.add_argument("-i", "--interative", action="store_true", default=False)
 
 AP_del = argparse.ArgumentParser("del",
     description="del environment variables from keychain.")
@@ -111,10 +113,27 @@ def show_variables(d, safe=True, **kwargs):
         else:
             print "%s=%s" % (k, v)
 
+def get_from_interactive():
+    user = raw_input("variable: ")
+    passwd = getpass.getpass("value: ")
+    return '%s=%s' % (user, passwd)
+
 def add(args):
     account = args.account
-    secret_txt = load_from_keychain_mac(account)
-    d = load_variables(secret_txt)
+    variables = args.variables
+
+    try:
+        secret_txt = load_from_keychain_mac(account)
+        d = load_variables(secret_txt)
+    except:
+        d = {}
+
+    if len(variables) == 0 and not args.interative:
+        sys.exit("Non interative mode require at least on variable=value", -1)
+
+    if args.interative:
+        variables.append(get_from_interactive())
+
 
     for k in args.variables:
         if '=' in k:
@@ -149,9 +168,13 @@ def delete(args):
 
 def show(args):
     account = args.account
-    secret_txt = load_from_keychain_mac(account)
-    d = load_variables(secret_txt)
+    try:
+        secret_txt = load_from_keychain_mac(account)
+    except:
+        logger.error("Failed to retrive account: %s from keychain." % account)
+        sys.exit(-1)
 
+    d = load_variables(secret_txt)
     show_variables(d, account=account, safe=not(args.unmask))
 
 
