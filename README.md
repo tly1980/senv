@@ -3,7 +3,7 @@
 senv = "secure env", it loads enviornment variables from your keychain (for now it supports Mac only)
 
 Adding enviornment variables to keychain using account `test_a` .
-```
+```bash
 $> senv add test_a a=AAA b=BBB
 ```
 
@@ -28,7 +28,7 @@ b=BBB
 
 With this you can add your aws key to keychain.
 
-```
+```bash
 $> senv show my_aws
 [account]: my_aws
 ====================
@@ -38,7 +38,7 @@ AWS_SECURITY_TOKEN=AQ***********************************************************
 ```
 
 So I can simly do 
-```
+```bash
 $> senv run my_aws aws s3 ls s3://my-bucket/
                            PRE my_folder/
                            PRE my_folder2/
@@ -47,7 +47,7 @@ $> senv run my_aws aws s3 ls s3://my-bucket/
 
 If you have multiple awskey like me, you'd better leverage `alias`.
 
-```
+```bash
 # Leave this in your .bash_profile
 alias k1='senv run aws_k1'
 alias k2='senv run aws_k2'
@@ -55,7 +55,7 @@ alias k3='senv run aws_k3'
 ```
 
 And you can simply do:
-```
+```bash
 $> k1 aws s3 ls s3://k1-bucket/...
 $> k2 aws s3 ls s3://k2-bucket/...
 $> k3 aws s3 ls s3://k3-bucket/...
@@ -70,7 +70,7 @@ It supports following actions:
 3. run
 4. del
 
-```
+```bash
 $> senv add --help
 usage: add [-h] [--service SERVICE] [--dry] [-i]
            account [variables [variables ...]]
@@ -88,7 +88,7 @@ optional arguments:
   -i, --interative
 ```
 
-```
+```bash
 $> senv show --help
 usage: show [-h] [--unmask] account
 
@@ -103,7 +103,7 @@ optional arguments:
 ```
 
 
-```
+```bash
 $> senv run --help
 usage: run [-h] account cmd [cmd ...]
 
@@ -117,7 +117,7 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
-```
+```bash
 $> senv del --help
 usage: del [-h] [--dry] account variables [variables ...]
 
