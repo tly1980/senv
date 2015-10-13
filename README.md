@@ -4,13 +4,12 @@ senv = "secure env", it loads enviornment variables from your keychain (for now 
 
 Adding enviornment variables to keychain using account `test_a` .
 ```
-senv add test_a a=AAA b=BBB
+$> senv add test_a a=AAA b=BBB
 ```
 
 Show enviornment variables binding to that account
 ```bash
-# 
-senv show test_a
+$> senv show test_a
 [account]: test_a
 ====================
 a=********
@@ -57,9 +56,9 @@ alias k3='senv run aws_k3'
 
 And you can simply do:
 ```
-k1 aws s3 ls s3://k1-bucket/...
-k2 aws s3 ls s3://k2-bucket/...
-k3 aws s3 ls s3://k3-bucket/...
+$> k1 aws s3 ls s3://k1-bucket/...
+$> k2 aws s3 ls s3://k2-bucket/...
+$> k3 aws s3 ls s3://k3-bucket/...
 ```
 
 ### Usages
@@ -119,7 +118,7 @@ optional arguments:
 ```
 
 ```
-$ senv del --help
+$> senv del --help
 usage: del [-h] [--dry] account variables [variables ...]
 
 del environment variables from keychain.
