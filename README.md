@@ -61,6 +61,18 @@ $> k2 aws s3 ls s3://k2-bucket/...
 $> k3 aws s3 ls s3://k3-bucket/...
 ```
 
+### Installations
+
+I haven't implemented a pip package, yet. As [senv](#senv) use the standard lib ships with python 2.x, so doesn't really need to pip install it.
+
+You can just download the [senv.py](https://raw.githubusercontent.com/tly1980/senv/master/src/senv.py) to your path.
+
+```bash
+wget https://raw.githubusercontent.com/tly1980/senv/master/src/senv.py -o /usr/local/bin/senv
+
+chmod a+x /usr/local/bin/senv
+```
+
 ### Usages
 
 It supports following actions:
