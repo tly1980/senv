@@ -68,7 +68,7 @@ I haven't implemented a pip package, yet. As [senv](#senv) use the standard lib 
 You can just download the [senv.py](https://raw.githubusercontent.com/tly1980/senv/master/src/senv.py) to your path.
 
 ```bash
-wget https://raw.githubusercontent.com/tly1980/senv/master/src/senv.py -o /usr/local/bin/senv
+wget https://raw.githubusercontent.com/tly1980/senv/master/src/senv.py -O /usr/local/bin/senv
 
 chmod a+x /usr/local/bin/senv
 ```
