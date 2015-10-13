@@ -30,8 +30,8 @@ b=BBB
 With this you can add your aws key to keychain.
 
 ```
-$> senv show ndm_aws
-[account]: ndm_aws
+$> senv show my_aws
+[account]: my_aws
 ====================
 AWS_ACCESS_KEY_ID=AS****************IA
 AWS_SECRET_ACCESS_KEY=A2************************************NL
@@ -40,7 +40,7 @@ AWS_SECURITY_TOKEN=AQ***********************************************************
 
 So I can simly do 
 ```
-$> senv run ndm_aws aws s3 ls s3://my-bucket/
+$> senv run my_aws aws s3 ls s3://my-bucket/
                            PRE my_folder/
                            PRE my_folder2/
                            ....
