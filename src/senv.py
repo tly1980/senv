@@ -60,7 +60,7 @@ AP_show.add_argument("--unmask", default=False, action='store_true')
 
 
 logging.basicConfig()
-logger = logging.getLogger("srun")
+logger = logging.getLogger("senv")
 
 cmd_wrapper = subprocess.call
 
@@ -112,12 +112,11 @@ def dump_variables(d):
     csvf.writerow(lst)
     return sio.getvalue().strip()
 
-def run(args):
-    account = args.account
+def run(account, cmds):
     secret_txt = load_from_keychain_mac(account)
     d = load_variables(secret_txt)
     to_env(d)
-    sys.exit(cmd_wrapper(args.cmd))
+    sys.exit(cmd_wrapper(cmds))
 
 def mask(s, start=2, end=2):
     if len(s) > 8:
@@ -206,8 +205,7 @@ def main():
     action = sys.argv[1]
     argv = sys.argv[2:]
     if action == 'run':
-        run(
-            AP_run.parse_args(argv))
+        run(argv[0], argv[1:])
     elif action == 'add':
         add(
             AP_add.parse_args(argv))
