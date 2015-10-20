@@ -112,7 +112,9 @@ def dump_variables(d):
     csvf.writerow(lst)
     return sio.getvalue().strip()
 
-def run(account, cmds):
+def run(argv):
+    account = argv[0]
+    cmds = argv[1:]
     secret_txt = load_from_keychain_mac(account)
     d = load_variables(secret_txt)
     to_env(d)
@@ -141,7 +143,9 @@ def get_from_interactive():
     passwd = getpass.getpass("value: ")
     return '%s=%s' % (user, passwd)
 
-def add(args):
+def add(argv):
+    args = AP_add.parse_args(argv)
+
     account = args.account
     variables = args.variables
 
@@ -173,7 +177,8 @@ def add(args):
             service_name=args.service)
 
 
-def delete(args):
+def delete(argv):
+    args = AP_del.parse_args(argv)
     account = args.account
     secret_txt = load_from_keychain_mac(account)
     d = load_variables(secret_txt)
@@ -189,7 +194,8 @@ def delete(args):
             service_name=account)
 
 
-def show(args):
+def show(argv):
+    args =  AP_show.parse_args(argv)
     account = args.account
     try:
         secret_txt = load_from_keychain_mac(account)
@@ -201,21 +207,26 @@ def show(args):
     show_variables(d, account=account, safe=not(args.unmask))
 
 
+ACTIONS = {
+    'run': run,
+    'del': delete,
+    'add': add,
+    'show': show,
+}
+
+
 def main():
     action = sys.argv[1]
     argv = sys.argv[2:]
-    if action == 'run':
-        run(argv[0], argv[1:])
-    elif action == 'add':
-        add(
-            AP_add.parse_args(argv))
-    elif action == 'del':
-        delete(
-            AP_del.parse_args(argv))
 
-    elif action == 'show':
-        show(
-            AP_show.parse_args(argv))
+    action_fun = ACTIONS.get(action, None)
+
+    if not action_fun:
+        sys.exit(
+            "'%s' is unspported, only %s is allowed" % (action, ACTIONS.keys()))
+    action_fun(argv)
+
+
 
 
 if __name__ == '__main__':
